@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tabela HTML</title>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>Coluna 1, Linha 1</td>
+        <td>Coluna 2, Linha 1</td>
+      </tr>
+      <tr>
+        <td>Coluna 1, Linha 2</td>
+        <td>Coluna 2, Linha 2</td>
+      </tr>
+    </table>
+  </body>
+</html>
