@@ -47,7 +47,7 @@ END
 
 CREATE PROCEDURE usp_cancelar_reserva
     @cpf VARCHAR(11),
-	@numero_mesa INT,
+    @numero_mesa INT,
     @data_reserva DATETIME
 AS
 BEGIN
