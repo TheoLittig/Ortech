@@ -129,7 +129,8 @@ CREATE TABLE Avaliacao (
    id_avaliacao INT IDENTITY PRIMARY KEY,
    cpf VARCHAR(11) NOT NULL,
    id_produto INT NOT NULL,
-   comentario_avaliacao VARCHAR(255) NOT NULL,
+   estrelas INT NOT NULL,
+   comentario_avaliacao VARCHAR(255),
    data_avaliacao DATETIME NOT NULL,
    FOREIGN KEY (id_produto) REFERENCES Produtos(id_produto),
    FOREIGN KEY (cpf) REFERENCES Cliente(cpf)
