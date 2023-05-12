@@ -201,35 +201,6 @@ VALUES ('Fornecedor B', '(22) 2222-2222', 'fornecedorb@teste.com', 'Rua B, 456')
 -------------------------------------------------------
 
 
-/*
-INSERT INTO Pedido (cpf, data_pedido, valor_total, formapagamento, numero_mesa)
-VALUES ('12345678900', 2023-04-28 19:00:00, 75.50, 'Cartão de Crédito', 5),
-('98765432109', '2023-04-28 20:15:00', 42.00, 'Dinheiro', 2);
-
-INSERT INTO StatusPedido (id_pedido, id_funcionario, status_pedido)
-VALUES (1, 4, 'Em Preparo'),
-(2, 2, 'Em Preparo');
-
-INSERT INTO Produtos (nome_produto, descricao, id_categoriaprod, preco, unidade_medida)
-VALUES ('Sushi Misto', 'Salmão, Atum e Kani enrolados em arroz e alga', 1, 28.00, 'unidade'),
-('Yakissoba', 'Macarrão frito com legumes e frango', 2, 22.50, 'porção');
-
-INSERT INTO Insumos (nome_insumo, descricao, id_fornecedor, quantidade_insumo, unidade_medida, data_entrada, data_validade)
-VALUES ('Arroz', 'Arroz para sushi', 1, 50, 'kg', '2023-04-15', '2023-05-15'),
-('Salmão', 'Peixe Salmão fresco', 2, 10, 'kg', '2023-04-20', '2023-04-30');
-
-INSERT INTO InsumosProduto (id_produto, id_insumo, quantidade_insumo, unidade_medida)
-VALUES (1, 1, 0.05, 'kg'),
-(1, 2, 0.2, 'kg'),
-(2, 1, 0.2, 'kg'),
-(2, 2, 0.3, 'kg');
-
-INSERT INTO DetalhesPedido (id_pedido, id_produto, quantidade_produto, valor_unitario, observacoes)
-VALUES (1, 1, 2, 28.00, 'sem cream cheese'),
-(1, 2, 1, 22.50, 'picante'),
-(2, 2, 1, 22.50, NULL);
-*/
-
 CREATE PROCEDURE usp_login 
     @email varchar(100),
     @senha varchar(8)
