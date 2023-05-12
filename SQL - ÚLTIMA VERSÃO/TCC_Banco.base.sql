@@ -230,21 +230,23 @@ VALUES (1, 1, 2, 28.00, 'sem cream cheese'),
 (2, 2, 1, 22.50, NULL);
 */
 
-drop procedure usp_login
-
 CREATE PROCEDURE usp_login 
-@email varchar(100),
-@senha varchar(8)
+    @email varchar(100),
+    @senha varchar(8)
 AS
 BEGIN
-  DECLARE @count int
-  
-  SELECT @count = COUNT(*) FROM Funcionario WHERE email = @email AND senha = @senha
-  
-  IF @count = 1
-    SELECT 'Login aceito' AS result
-  ELSE
-    SELECT 'Login recusado' AS result
+    IF CHARINDEX('@', @email) > 1 AND CHARINDEX('.', @email) > 1 AND
+       @email LIKE '%_@__%.__%'
+    BEGIN
+        IF (SELECT COUNT(*) FROM Funcionario WHERE email = @email AND senha = @senha) = 1
+            SELECT 'Login aceito' AS result
+        ELSE
+            SELECT 'Login recusado' AS result
+    END
+    ELSE
+    BEGIN
+        SELECT 'Email inválido' AS result
+    END
 END
 
 exec usp_login "joao", 12345678
