@@ -42,3 +42,29 @@ BEGIN
         PRINT 'A mesa selecionada não está disponível.';
     END
 END
+
+-------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE usp_cancelar_reserva
+    @cpf VARCHAR(11),
+	@numero_mesa INT,
+    @data_reserva DATETIME
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Reserva WHERE cpf = @cpf AND numero_mesa = @numero_mesa AND data_reserva = @data_reserva)
+    BEGIN
+        DELETE FROM Reserva
+        WHERE numero_mesa = @numero_mesa AND data_reserva = @data_reserva;
+
+        UPDATE Mesa
+        SET status_mesa = 'Disponível'
+        WHERE numero_mesa = @numero_mesa;
+
+        PRINT 'Reserva cancelada!';
+
+    END
+    ELSE
+    BEGIN
+        PRINT 'Não foi possível cancelar a reserva. Verifique se os dados informados estão corretos.';
+    END
+END
