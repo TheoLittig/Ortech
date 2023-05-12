@@ -1,5 +1,3 @@
-drop procedure usp_login
-
 CREATE PROCEDURE usp_login 
     @email varchar(100),
     @senha varchar(8)
