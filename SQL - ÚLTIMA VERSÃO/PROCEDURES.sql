@@ -1,6 +1,6 @@
 CREATE PROCEDURE usp_login 
-    @email varchar(100),
-    @senha varchar(8)
+    @email VARCHAR(100),
+    @senha CHAR(8)
 AS
 BEGIN
     IF CHARINDEX('@', @email) > 1 AND CHARINDEX('.', @email) > 1 AND
