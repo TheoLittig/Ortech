@@ -68,3 +68,28 @@ BEGIN
         PRINT 'Não foi possível cancelar a reserva. Verifique se os dados informados estão corretos.';
     END
 END
+
+------------------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE usp_cadastrarCliente
+    @cpf VARCHAR(11),
+    @nome VARCHAR(50),
+    @telefone VARCHAR(20),
+    @email VARCHAR(50)
+AS
+BEGIN
+    IF CHARINDEX('@', @email) > 1 AND CHARINDEX('.', @email) > 1 AND
+       @email LIKE '%_@__%.__%'
+	BEGIN
+       IF NOT EXISTS (SELECT * FROM Cliente WHERE cpf = @cpf OR email = @email)
+      
+          INSERT INTO Cliente (cpf, nome, telefone, email)
+        VALUES (@cpf, @nome, @telefone, @email)
+	 ELSE
+	   SELECT 'O CPF ou EMAIL já cadastrado, não é possivel realizar o cadastro'
+	  END
+	ELSE
+	 BEGIN
+	  SELECT 'Informe um Email válido'
+     END
+END
