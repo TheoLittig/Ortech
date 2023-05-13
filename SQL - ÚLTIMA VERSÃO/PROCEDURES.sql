@@ -25,23 +25,26 @@ CREATE PROCEDURE usp_fazer_reserva
     @data_reserva DATETIME
 AS
 BEGIN
-     IF EXISTS (SELECT 1 FROM Mesa WHERE numero_mesa = @numero_mesa AND status_mesa = 'Disponível')
-    BEGIN
-        INSERT INTO Reserva (cpf, numero_mesa, data_reserva)
-        VALUES (@cpf, @numero_mesa, @data_reserva);
+     IF EXISTS (SELECT 1 FROM Cliente WHERE cpf = @cpf)
+	  BEGIN
+       IF EXISTS (SELECT 1 FROM Mesa WHERE numero_mesa = @numero_mesa AND status_mesa = 'Disponível')
+        BEGIN
+         INSERT INTO Reserva (cpf, numero_mesa, data_reserva)
+          VALUES (@cpf, @numero_mesa, @data_reserva)
+          UPDATE Mesa
+          SET status_mesa = 'Reservado'
+          WHERE numero_mesa = @numero_mesa
 
-        UPDATE Mesa
-        SET status_mesa = 'Reservado'
-        WHERE numero_mesa = @numero_mesa;
-
-        PRINT 'Reserva realizada com sucesso!';
-
-    END
+          SELECT 'Reserva realizada com sucesso!'
+		  END
     ELSE
-    BEGIN
-        PRINT 'A mesa selecionada não está disponível.';
+        SELECT 'A mesa selecionada não está disponível.'
     END
-END
+	  ELSE
+	    BEGIN
+	      SELECT 'CPF não cadastrado ou incorreto'
+    END
+ END
 
 -------------------------------------------------------------------------------------------------
 
