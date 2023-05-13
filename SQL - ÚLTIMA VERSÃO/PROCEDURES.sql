@@ -36,7 +36,7 @@ BEGIN
           WHERE numero_mesa = @numero_mesa
 
           SELECT 'Reserva realizada com sucesso!'
-		  END
+	 END
     ELSE
         SELECT 'A mesa selecionada não está disponível.'
     END
