@@ -1,0 +1,12 @@
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\bin\Debug\TCC-appDesktop_1-0.exe.config
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\bin\Debug\TCC-appDesktop_1-0.exe
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\bin\Debug\TCC-appDesktop_1-0.pdb
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\obj\Debug\TCC-appDesktop_1-0.csproj.AssemblyReference.cache
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\obj\Debug\TCC-appDesktop_1-0.csproj.SuggestedBindingRedirects.cache
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\obj\Debug\TCC_appDesktop_1_0.Properties.Resources.resources
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\obj\Debug\TCC-appDesktop_1-0.csproj.GenerateResource.cache
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\obj\Debug\TCC-appDesktop_1-0.csproj.CoreCompileInputs.cache
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\obj\Debug\TCC-appDesktop_1-0.exe
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\obj\Debug\TCC-appDesktop_1-0.pdb
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\obj\Debug\TCC_appDesktop_1_0.Telas.FrmTelaLogin.resources
+C:\Users\rapha\Downloads\DESKTOPIO\TCC-appDesktop_1-0\TCC-appDesktop_1-0\obj\Debug\TCC_appDesktop_1_0.Telas.FrmTelaInicial.resources
