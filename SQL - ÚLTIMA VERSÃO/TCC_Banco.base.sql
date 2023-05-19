@@ -73,7 +73,7 @@ CREATE TABLE CategoriaProduto (
 );
 go
 -- Criação da tabela Produtos
-CREATE TABLE Produto (
+CREATE TABLE Produtos (
   id_produto INT IDENTITY NOT NULL PRIMARY KEY,
   nome_produto VARCHAR(50) NOT NULL,
   descricao VARCHAR(200) NOT NULL,
