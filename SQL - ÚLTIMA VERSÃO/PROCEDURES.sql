@@ -96,3 +96,29 @@ BEGIN
 	  SELECT 'Informe um Email válido'
      END
 END
+--------------------------------------------------------------------------------------------------------------------
+drop procedure ReceberPedido
+CREATE PROCEDURE ReceberPedido
+    @cpf VARCHAR(11),
+    @data_pedido VARCHAR(19),
+    @valor_total DECIMAL(10, 2),
+    @formapagamento VARCHAR(100),
+    @numero_mesa INT,
+    @id_produto INT,
+    @quantidade_produto INT,
+    @valor_unitario DECIMAL(10, 2),
+    @observacoes VARCHAR(100)
+AS
+BEGIN
+     DECLARE @data_pedido_convertida DATETIME
+    SET @data_pedido_convertida = CONVERT(DATETIME, @data_pedido, 120)
+
+    -- Inserir o pedido na tabela Pedido
+    INSERT INTO Pedido (cpf, data_pedido, valor_total, formapagamento, numero_mesa)
+    VALUES (@cpf, @data_pedido_convertida, @valor_total, @formapagamento, @numero_mesa)
+
+    -- Inserir os detalhes do pedido na tabela DetalhesPedido
+    INSERT INTO DetalhesPedido (id_pedido, id_produto, quantidade_produto, valor_unitario, observacoes)
+    VALUES (SCOPE_IDENTITY(), @id_produto, @quantidade_produto, @valor_unitario, @observacoes)
+END
+--------------------------------------------------------------------------------------------------------------------------------
