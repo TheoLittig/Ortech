@@ -16,6 +16,7 @@ CREATE TABLE Cliente (
   email VARCHAR(50) NOT NULL,
   data_nascimento DATE,
   sexo CHAR(1),
+  senha VARCHAR(MAX) NOT NULL,
   img_cliente VARBINARY(MAX)
 );
 go
@@ -34,7 +35,6 @@ CREATE TABLE Funcionario (
   data_nascimento DATE NOT NULL,
   sexo CHAR(1) NOT NULL,
   senha VARCHAR(8) NOT NULL,
-  img_func VARBINARY(MAX),
   data_contratacao DATE NOT NULL
 );
 go
@@ -82,7 +82,7 @@ CREATE TABLE Produtos (
   id_categoriaprod INT NOT NULL,
   preco DECIMAL(10,2) NOT NULL,
   unidade_medida VARCHAR(10) NOT NULL,
-  img_pratos VARBINARY(MAX),
+  img_prato VARBINARY(MAX)
   FOREIGN KEY (id_categoriaprod) REFERENCES CategoriaProduto (id_categoriaprod)
 );
 go
@@ -154,8 +154,8 @@ CREATE TABLE DetalhesPedido (
 );
 go
 ---------------------------CLIENTES---------------------------------------------------------------------------------------------------------------
-INSERT INTO Cliente (cpf, nome, telefone, email, data_nascimento, sexo)
-VALUES ('12345678900', 'Maria da Silva', '(11) 99999-9999', 'maria.silva@gmail.com', '1990-01-01', 'F');
+INSERT INTO Cliente (cpf, nome, telefone, email, data_nascimento, sexo, senha)
+VALUES ('12345678900', 'Maria da Silva', '(11) 99999-9999', 'maria.silva@gmail.com', '1990-01-01', 'F', '123456');
 go
 ---------------------------FUNCIONARIOS-------------------------------------------------------------------------------------------------------------------------------
 INSERT INTO Funcionario (nome, telefone, email, cargo, turno, salario, endereco, CEP, cpf, data_nascimento, sexo, senha, data_contratacao)
@@ -324,15 +324,15 @@ VALUES
     -- Insumo: Pepino
     (2, 4, 2, 'unidade')
 ---------------------------------------------------------------------------------------------------------------------------
-drop procedure usp_login
+drop procedure usp_loginFunc
 
-CREATE PROCEDURE usp_login 
+CREATE PROCEDURE usp_loginFunc
     @email varchar(100),
     @senha varchar(8)
 AS
 BEGIN
     IF CHARINDEX('@', @email) > 1 AND CHARINDEX('.', @email) > 1 AND
-       @email LIKE '%_@__%.__%'
+       @email LIKE '%_@__%.__%' AND (LEN(@senha) = 8)
     BEGIN
         IF (SELECT COUNT(*) FROM Funcionario WHERE email = @email AND senha = @senha) = 1
             SELECT 'Login aceito'
@@ -345,8 +345,31 @@ BEGIN
     END
 END
 
-exec usp_login "joao", 12345678
-exec usp_login "joao.souza@gmail.com", 12345678
+exec usp_loginFunc "joao", 12345678
+exec usp_loginFunc "joao.souza@gmail.com", 12345678
+--------------------------------------------------------------------------------------------------
+drop procedure usp_loginCliente
+
+CREATE PROCEDURE usp_loginCliente
+    @email varchar(100),
+    @senha varchar(MAX)
+AS
+BEGIN
+    IF CHARINDEX('@', @email) > 1 AND CHARINDEX('.', @email) > 1 AND
+       @email LIKE '%_@__%.__%' AND (LEN(@senha) >= 8)
+    BEGIN
+        IF (SELECT COUNT(*) FROM Cliente WHERE email = @email AND senha = @senha) = 1
+            SELECT 'Login aceito'
+        ELSE
+            SELECT 'Login recusado'
+    END
+    ELSE
+    BEGIN
+        SELECT 'Email ou senha inválidos'
+    END
+END
+
+exec usp_loginCliente 'Fulano@gmail.com', '23456474'
 
 ---------------------------------------------------------------------------------------------------
 drop procedure usp_cadastrarCliente
@@ -355,26 +378,27 @@ CREATE PROCEDURE usp_cadastrarCliente
     @cpf VARCHAR(11),
     @nome VARCHAR(50),
     @telefone VARCHAR(20),
-    @email VARCHAR(50)
+    @email VARCHAR(50),
+	@senha VARCHAR(MAX)
 AS
 BEGIN
     IF CHARINDEX('@', @email) > 1 AND CHARINDEX('.', @email) > 1 AND
-       @email LIKE '%_@__%.__%'
+       @email LIKE '%_@__%.__%' AND (LEN(@senha) >= 8)
 	BEGIN
        IF NOT EXISTS (SELECT * FROM Cliente WHERE cpf = @cpf OR email = @email)
-          INSERT INTO Cliente (cpf, nome, telefone, email)
-        VALUES (@cpf, @nome, @telefone, @email)
+          INSERT INTO Cliente (cpf, nome, telefone, email, senha)
+        VALUES (@cpf, @nome, @telefone, @email, @senha)
 	 ELSE
 	   SELECT 'O CPF ou EMAIL já cadastrado, não é possivel realizar o cadastro'
 	  END
 	ELSE
 	 BEGIN
-	  SELECT 'Informe um Email válido'
+	  SELECT 'Informe um Email ou uma senha válida'
      END
 END
 
-EXEC usp_cadastrarCliente '12345678901', 'Fulano de Tal', '(11) 1234-5678', 'Fulano@gmail.com'
-EXEC usp_cadastrarCliente '12345678901', 'Fulano de Tal', '(11) 1234-5678', 'maria.silva@gmail.com'
+EXEC usp_cadastrarCliente '12345678901', 'Fulano de Tal', '(11) 1234-5678', 'Fulano@gmail.com', '23456474'
+EXEC usp_cadastrarCliente '12345678901', 'Fulano de Tal', '(11) 1234-5678', 'maria.silva@gmail.com', '3456'
 
 ---------------------------------------------------------------------------------------------------
 drop procedure usp_fazer_reserva
