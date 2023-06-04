@@ -155,7 +155,7 @@ CREATE TABLE DetalhesPedido (
 go
 ---------------------------CLIENTES---------------------------------------------------------------------------------------------------------------
 INSERT INTO Cliente (cpf, nome, telefone, email, data_nascimento, sexo, senha)
-VALUES ('12345678900', 'Maria da Silva', '(11) 99999-9999', 'maria.silva@gmail.com', '1990-01-01', 'F', '123456');
+VALUES ('12345678900', 'Maria da Silva', '(11) 99999-9999', 'maria.silva@gmail.com', '1990-01-01', 'F', '12345678');
 go
 ---------------------------FUNCIONARIOS-------------------------------------------------------------------------------------------------------------------------------
 INSERT INTO Funcionario (nome, telefone, email, cargo, turno, salario, endereco, CEP, cpf, data_nascimento, sexo, senha, data_contratacao)
