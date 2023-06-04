@@ -34,6 +34,7 @@ CREATE TABLE Funcionario (
   data_nascimento DATE NOT NULL,
   sexo CHAR(1) NOT NULL,
   senha VARCHAR(8) NOT NULL,
+  img_func VARBINARY(MAX),
   data_contratacao DATE NOT NULL
 );
 go
