@@ -15,7 +15,8 @@ CREATE TABLE Cliente (
   telefone VARCHAR(20) NOT NULL,
   email VARCHAR(50) NOT NULL,
   data_nascimento DATE,
-  sexo CHAR(1)
+  sexo CHAR(1),
+  img_cliente VARBINARY(MAX)
 );
 go
 -- Criação da tabela Funcionario
@@ -79,7 +80,8 @@ CREATE TABLE Produtos (
   descricao VARCHAR(200) NOT NULL,
   id_categoriaprod INT NOT NULL,
   preco DECIMAL(10,2) NOT NULL,
-  unidade_medida VARCHAR(10) NOT NULL
+  unidade_medida VARCHAR(10) NOT NULL,
+  img_pratos VARBINARY(MAX),
   FOREIGN KEY (id_categoriaprod) REFERENCES CategoriaProduto (id_categoriaprod)
 );
 go
