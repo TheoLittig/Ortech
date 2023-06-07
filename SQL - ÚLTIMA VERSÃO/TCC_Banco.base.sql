@@ -82,7 +82,7 @@ CREATE TABLE Produtos (
   id_categoriaprod INT NOT NULL,
   preco DECIMAL(10,2) NOT NULL,
   unidade_medida VARCHAR(10) NOT NULL,
-  img_prato VARBINARY(MAX)
+  img_prato VARBINARY(MAX),
   FOREIGN KEY (id_categoriaprod) REFERENCES CategoriaProduto (id_categoriaprod)
 );
 go
