@@ -59,10 +59,10 @@ CREATE TABLE Pedido (
 go
 -- Criação da tabela StatusPedido
 CREATE TABLE StatusPedido (
-id_status INT IDENTITY PRIMARY KEY,
 id_pedido INT NOT NULL,
-id_funcionario INT NOT NULL,
-status_pedido VARCHAR(50) NOT NULL default 'Em Preparo'
+id_funcionario INT,
+status_pedido VARCHAR(50) NOT NULL default 'Em Preparo',
+PRIMARY KEY (id_pedido),
 FOREIGN KEY (id_pedido) REFERENCES Pedido(id_pedido),
 FOREIGN KEY (id_funcionario) REFERENCES Funcionario(id_funcionario)
 );
@@ -82,7 +82,7 @@ CREATE TABLE Produtos (
   id_categoriaprod INT NOT NULL,
   preco DECIMAL(10,2) NOT NULL,
   unidade_medida VARCHAR(10) NOT NULL,
-  img_prato VARBINARY(MAX),
+  img_prato VARBINARY(MAX)
   FOREIGN KEY (id_categoriaprod) REFERENCES CategoriaProduto (id_categoriaprod)
 );
 go
@@ -148,10 +148,18 @@ CREATE TABLE DetalhesPedido (
    quantidade_produto INT NOT NULL,
    valor_unitario DECIMAL(10, 2) NOT NULL,
    observacoes VARCHAR(100),
-   Primary key (id_pedido, id_produto),
+   PRIMARY KEY (id_pedido, id_produto),
    FOREIGN KEY (id_pedido) REFERENCES Pedido(id_pedido),
    FOREIGN KEY (id_produto) REFERENCES Produtos(id_produto)
 );
+go
+	CREATE  TYPE dbo.ProdutosType AS TABLE
+(
+    id_produto INT,
+    quantidade_produto INT,
+    valor_unitario DECIMAL(10, 2),
+    observacoes VARCHAR(100)
+)
 go
 ---------------------------CLIENTES---------------------------------------------------------------------------------------------------------------
 INSERT INTO Cliente (cpf, nome, telefone, email, data_nascimento, sexo, senha)
@@ -460,33 +468,70 @@ END
 
 exec usp_cancelar_reserva '12345678900', 1, '1900-01-01 10:00:00'
 -------------------------------------------------------------------------------------------------------------
-drop procedure ReceberPedido
-CREATE PROCEDURE ReceberPedido
+CREATE PROCEDURE usp_InserirPedido
     @cpf VARCHAR(11),
-    @data_pedido VARCHAR(19),
+    @data_pedido DATE,
     @valor_total DECIMAL(10, 2),
     @formapagamento VARCHAR(100),
     @numero_mesa INT,
-    @id_produto INT,
-    @quantidade_produto INT,
-    @valor_unitario DECIMAL(10, 2),
-    @observacoes VARCHAR(100)
+    @produtos AS dbo.ProdutosType READONLY
 AS
 BEGIN
-     DECLARE @data_pedido_convertida DATETIME
-    SET @data_pedido_convertida = CONVERT(DATETIME, @data_pedido, 120)
+     
+	 Declare @id_pedido int;
 
     -- Inserir o pedido na tabela Pedido
     INSERT INTO Pedido (cpf, data_pedido, valor_total, formapagamento, numero_mesa)
-    VALUES (@cpf, @data_pedido_convertida, @valor_total, @formapagamento, @numero_mesa)
+    VALUES (@cpf, CONVERT(DATE,@data_pedido, 120), @valor_total, @formapagamento, @numero_mesa);
+
+	-- Obter o ID do pedido recém-inserido
+    SET @id_pedido = SCOPE_IDENTITY();
 
     -- Inserir os detalhes do pedido na tabela DetalhesPedido
     INSERT INTO DetalhesPedido (id_pedido, id_produto, quantidade_produto, valor_unitario, observacoes)
-    VALUES (SCOPE_IDENTITY(), @id_produto, @quantidade_produto, @valor_unitario, @observacoes)
-END
+    SELECT @id_pedido, p.id_produto, dp.quantidade_produto, dp.valor_unitario, dp.observacoes
+    FROM @produtos dp
+    JOIN Produtos p ON dp.id_produto = p.id_produto;
+	    --SOMA TOTAL DOS VALORES
+		UPDATE Pedido
+    SET valor_total = (
+        SELECT SUM(d.quantidade_produto * d.valor_unitario)
+        FROM DetalhesPedido d
+        WHERE d.id_pedido = @id_pedido
+    )
+    WHERE id_pedido = @id_pedido;
+	--OCUPAR A MESA
+	UPDATE Mesa
+     SET status_mesa = 'Ocupada'
+     WHERE numero_mesa = @numero_mesa;
+    -- Inserir o status do pedido na tabela StatusPedido
+INSERT INTO StatusPedido (id_pedido)
+VALUES (@id_pedido);
+END;
+-----------------------------------------------------------------------
 
-EXEC ReceberPedido '12345678900', '2023-05-19 12:34:56', 25.97, 'Cartão de crédito', 1, 1, 2, 10.99, 'Sem cebola'
+--executar a procedure acima
+DECLARE @produtos dbo.ProdutosType;
+
+INSERT INTO @produtos (id_produto, quantidade_produto, valor_unitario, observacoes)
+VALUES
+    (1, 2, 10.50, 'Sem cebola'),
+    (2, 1, 8.75, 'Com molho extra'),
+    (3, 3, 15.00, 'Com queijo');
+
+EXEC usp_InserirPedido
+    @cpf = '12345678900',
+    @data_pedido = '2023-05-19 12:34:56',
+    @valor_total = 50.25,
+    @formapagamento = 'Cartão de crédito',
+    @numero_mesa = 3,
+    @produtos = @produtos
+
+drop procedure usp_InserirPedido
 ---------------------------------------------------------------------------------------------------------
+	
+	
+
 
 /*
 select * from Pedido
@@ -502,3 +547,11 @@ select * from Avaliacao
 select * from Reserva
 select * from CategoriaProduto
 */
+
+
+SELECT p.nome_produto, dp.quantidade_produto
+FROM Pedido pe
+INNER JOIN DetalhesPedido dp ON pe.id_pedido = dp.id_pedido
+INNER JOIN Produtos p ON p.id_produto = dp.id_produto
+WHERE pe.id_pedido = (SELECT MAX(id_pedido) FROM Pedido)
+ORDER BY dp.id_pedido DESC;
